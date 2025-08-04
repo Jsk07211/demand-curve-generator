@@ -3,7 +3,6 @@ export function setupGraph(dataset, max_x, max_y) {
     const margin = { top: 70, right: 30, bottom: 40, left: 80 };
     const width = 500 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
-    const padding = 10;
 
     // Set up the x and y scales
     // Range of pixels where the scale can live 
@@ -22,8 +21,8 @@ export function setupGraph(dataset, max_x, max_y) {
         .attr("transform", `translate(${margin.left}, ${margin.top})`);     // Image sits nicely in container
 
     // Define the x and y domains (What data goes into the range we declared earlier)
-    x.domain([0, max_x + padding]);
-    y.domain([0, max_y + padding]);
+    x.domain([0, max_x + 0.1 * max_x]);
+    y.domain([0, max_y + 0.1 * max_y]);
 
     // Add the x-axis
     svg.append("g")                                                         // Append new group element to svg

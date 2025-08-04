@@ -1,3 +1,18 @@
+export function validateCell(min, max) {
+    /**
+     * Clamp the values to be in range.
+     * 
+     * If user goes below the min, set the value to min.
+     * If user exceeds the max, set the value to max.
+     */
+}
+
+export function updateTable(dataset, max_y) {
+    /**
+     * 1. On button click, call this function. 
+     */
+}
+
 export function setupTable(dataset, max_y) {
     // Creating HTML table
     const table = d3.select("#table-container").append("table");
@@ -6,8 +21,8 @@ export function setupTable(dataset, max_y) {
 
     // Add new row and append the headers
     const columns = [
-        { label: "Price", key: "price" },
-        { label: "Quantity", key: "quantity" },
+        { label: "Price ($)", key: "price" },
+        { label: "Quantity (Units)", key: "quantity" },
     ]
 
     thead.append("tr")
@@ -26,8 +41,8 @@ export function setupTable(dataset, max_y) {
     // Create editable cells
     rows.selectAll("td")
         .data((row, index) => columns.map(column => ({                      // Return object literal directly, can wrap in () instead of { return x; }
-            column: column.key,                                   // Which column the cell is from
-            value: row[column.key],                               // Value of cell
+            column: column.key,                                             // Which column the cell is from
+            value: row[column.key],                                         // Value of cell
             rowData: row,                                                   // Reference to row data object
             rowIndex: index,                                                // Tracks position of row in the data
         })))
