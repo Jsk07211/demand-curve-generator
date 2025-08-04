@@ -11,10 +11,21 @@
 
 table {
     border-collapse: collapse;
+    text-align: center;
 }
 
 th,
 td {
     border: 1px solid black;
     padding: 8px;
+}
+
+input[type="number"] {
+    -webkit-appearance: textfield;
+    /* For WebKit-based browsers (Chrome, Safari, etc.) */
+    -moz-appearance: textfield;
+    /* For Gecko-based browsers (Firefox) */
+    appearance: textfield;
+    /* Standard property for modern browsers */
+    text-align: center;
 }
