@@ -25,6 +25,9 @@ const dataset = [
     { price: 90, quantity: 10 },
 ];
 
+const max_x = d3.max(dataset, data => data.price);
+const max_y = d3.max(dataset, data => data.quantity);
+
 // Create the svg element and append it to the chart                
 const svg = d3.select("#graph-container")
     .append("svg")
@@ -34,8 +37,8 @@ const svg = d3.select("#graph-container")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);     // Image sits nicely in container
 
 // Define the x and y domains (What data goes into the range we declared earlier)
-x.domain([0, d3.max(dataset, data => data.price) + padding]);
-y.domain([0, d3.max(dataset, data => data.quantity) + padding]);
+x.domain([0, max_x + padding]);
+y.domain([0, max_y + padding]);
 
 // Add the x-axis
 svg.append("g")                                                         // Append new group element to svg
@@ -78,19 +81,38 @@ thead.append("tr")
     .text(data => data.label);                                          // Choose what gets displayed on table
 
 // Select all rows and input our data
-const rows = tbody.selectAll("tr")
-    .data(dataset)
+const rows = tbody.selectAll("tr")                                      // Initially, no rows to select
+    .data(dataset)                                                      // Bind our data to the rows
     .enter()
     .append("tr");
 
-// Select all cells (table data) and input our data
-const cells = rows.selectAll("td")
-    .data(row => columns.map(column => {
-        return {
-            column: column,
-            value: row[column.key]
-        }
-    }))
+// Create editable cells
+rows.selectAll("td")
+    .data((row, index) => columns.map(column => ({                      // Return object literal directly, can wrap in () instead of { return x; }
+        column: column.toLowerCase(),                                   // Which column the cell is from
+        value: row[column.toLowerCase()],                               // Value of cell
+        rowData: row,                                                   // Reference to row data object
+        rowIndex: index,                                                // Tracks position of row in the data
+    })))
     .enter()
-    .append("td")
-    .text(data => data.value);
+    .append("td")                                                       // Add td element into DOM for each datapoint
+    .each(data => {
+        // Can only edit quantity not at start or end of table (fixed endpoints)
+        const isEditable = data.column === "quantity"
+            && data.rowIndex != 0
+            && data.rowIndex !== dataset.length - 1;
+
+        if (isEditable) {
+            d3.select()
+                .append("input")
+                .attr("type", "number")
+                .attr("min", 0)
+                .attr("max", max_y)
+                .attr("value", data.value)
+                .on("input", () => {
+                    data.rowData[data.column] = +this.value;            // Unary `+` converts string into a number
+                })
+        } else {
+            d3.select().text(data.value);
+        }
+    });
