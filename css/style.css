@@ -1,0 +1,20 @@
+#content-wrapper {
+    display: flex;
+    flex-direction: row;
+    /* Horizontal layout */
+    justify-content: flex-start;
+    align-items: center;
+    /* Align tops */
+    gap: 20px;
+    /* Space between graph and table */
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid black;
+    padding: 8px;
+}
