@@ -44,10 +44,13 @@ export function updateTable(tbody, columns, dataset, ranges) {
                     .attr("max", ranges.max_y)
                     .attr("value", data.value)
                     .on("keydown", function (event) {                         // Cannot use arrow function since it doesn't bind on `this`
-                        if (event.key == "Enter") {                           // Explicitly passing event; global windows.event is deprecated
+                        if (event.key == "Enter" || event.key === "Tab") {    // Explicitly passing event; global windows.event is deprecated
                             this.value = cellRange(this.value, ranges.min_y, ranges.max_y);
                             data.rowData[data.column] = this.value;           // Unary `+` converts string into a number
-                            this.blur();                                      // Remove focus from input field
+
+                            if (event.key === "Enter") {
+                                this.blur();                                      // Remove focus from
+                            }
                         }
                     })
             } else {
