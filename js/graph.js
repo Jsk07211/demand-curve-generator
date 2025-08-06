@@ -45,8 +45,26 @@ export function setupGraph(ranges) {
         .call(d3.axisBottom(x));                                            // Creates bottom horizontal axis
 
     // Add the y-axis
-    graph.append("g")                                                         // Append new group element to svg
+    graph.append("g")                                                       // Append new group element to svg
         .call(d3.axisLeft(y));                                              // Creates left vertical axis
+
+    // Create x-axis label
+    graph.append("text")
+        .attr("class", "x_label")
+        .attr("text-anchor", "end")
+        .attr("x", width / 1.75)
+        .attr("y", height + margin.bottom - 5)
+        .text("Quantity (Units)");
+
+    // Create y-axis label
+    graph.append("text")
+        .attr("class", "y_label")
+        .attr("text-anchor", "end")
+        .attr("x", -height / 2.5)                                           // x-axis uses height because of rotate
+        .attr("y", -margin.left / 1.5)                                      // y-axis uses width because of rotate
+        .attr("dy", ".75em")
+        .attr("transform", "rotate(-90)")
+        .text("Price ($)");
 
     return { graph, x, y }
 }
