@@ -29,3 +29,10 @@ input[type="number"] {
     /* Standard property for modern browsers */
     text-align: center;
 }
+
+#table-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* centers children horizontally */
+}

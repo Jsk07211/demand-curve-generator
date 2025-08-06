@@ -1,16 +1,21 @@
-export function setupGraph(dataset, max_x, max_y) {
+export function setupGraph(dataset) {
     // Set dimensions and margins for the chart
     const margin = { top: 70, right: 30, bottom: 40, left: 80 };
     const width = 500 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
 
+    const max_x = d3.max(dataset, data => data.price);
+    const max_y = d3.max(dataset, data => data.quantity);
+
     // Set up the x and y scales
     // Range of pixels where the scale can live 
     const x = d3.scaleLinear()                                              // x-axis: Price
-        .range([0, width]);
+        .range([0, width])
+        .domain([0, max_x + 0.1 * max_x]);
 
     const y = d3.scaleLinear()                                              // y-axis: Quantity
-        .range([height, 0]);                                                // svg coordinates for y-axis are reversed
+        .range([height, 0])                                                 // svg coordinates for y-axis are reversed
+        .domain([0, max_y + 0.1 * max_y]);
 
     // Create the svg element and append it to the chart                
     const svg = d3.select("#graph-container")
@@ -33,16 +38,14 @@ export function setupGraph(dataset, max_x, max_y) {
     svg.append("g")                                                         // Append new group element to svg
         .call(d3.axisLeft(y));                                              // Creates left vertical axis
 
-    // Create the line generator
-    const line = d3.line()
-        .x(data => x(data.price))
-        .y(data => y(data.quantity));
-
-    // Add the line path to the SVG element
-    svg.append("path")
-        .datum(dataset)                                                     // data is for a list of elements, datum only specifies one element
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-wdith", 1)
-        .attr("d", line);                                                   // Call line generator that we created in Line 48
+    // Add dots to the svg
+    svg.append("g")
+        .selectAll("circle")
+        .data(dataset)
+        .enter()
+        .append("circle")
+        .attr("cx", data => x(data.price))                                  // Use x scale function for x values (data values => pixel positions)
+        .attr("cy", data => y(data.quantity))                               // Use y scale function for y values (data values => pixel positions)
+        .attr("r", 5)
+        .style("fill", "#000");
 }

@@ -9,9 +9,22 @@
 </head>
 
 <body>
+    <p>
+        <strong>How to use this table and graph:</strong><br>
+    <ul class="instructions">
+        <li>You can edit the quantity values in the table, but only for rows between the first and last.</li>
+        <li>All input values are automatically clamped to stay within the minimum and maximum quantities defined by the
+            first and last rows.</li>
+        <li>After changing a value, press <em>Enter</em> to register your update.</li>
+        <li>When you're ready, click the <em>Generate</em> button to update the graph with your changes.</li>
+    </ul>
+    </p>
     <div id="content-wrapper">
         <div id="graph-container"></div>
-        <div id="table-container"></div>
+        <div id="table-wrapper">
+            <div id="table-container"></div>
+            <button style="margin-top: 1rem;" id="generate">Generate</button>
+        </div>
     </div>
 
     <!-- Script runs after HTML is loaded -->
