@@ -13,12 +13,19 @@ function cellRange(value, min, max) {
 }
 
 function checkEditable(dataset, data) {
+    /**
+     * Check if cell is in the quantity column
+     * and not the first or last cell in the table
+     */
     return data.column === "quantity"
         && data.rowIndex != 0
         && data.rowIndex !== dataset.length - 1;
 }
 
 function createInput(data, cell, ranges) {
+    /**
+     * Creates input cell and sets up event handler
+     */
     const input = cell.append("input")
         .attr("type", "number")
         .attr("min", 0)
@@ -27,7 +34,9 @@ function createInput(data, cell, ranges) {
             if (event.key === "Enter" || event.key === "Tab") {
                 this.value = cellRange(this.value, ranges.min_y, ranges.max_y);
                 data.rowData[data.column] = this.value;
-                if (event.key === "Enter") this.blur();
+                if (event.key === "Enter") {
+                    this.blur();
+                }
             }
         });
 
@@ -41,7 +50,6 @@ export function updateTable(tbody, columns, dataset, ranges) {
         .enter()
         .append("tr");
 
-    // TODO: Precompute the cells that are interactable; maybe create a function for that?
     // Create editable cells
     rows.selectAll("td")
         .data((row, index) => columns.map(column => ({                      // Return object literal directly, can wrap in () instead of { return x; }
@@ -61,22 +69,12 @@ export function updateTable(tbody, columns, dataset, ranges) {
                 // Select existing input or append if none exists
                 let input = cell.select("input");
                 if (input.empty()) {
-                    input = cell.append("input")
-                        .attr("type", "number")
-                        .attr("min", 0)
-                        .attr("max", ranges.max_y)
-                        .on("keydown", function (event) {
-                            if (event.key === "Enter" || event.key === "Tab") {
-                                this.value = cellRange(this.value, ranges.min_y, ranges.max_y);
-                                data.rowData[data.column] = this.value;
-                                if (event.key === "Enter") this.blur();
-                            }
-                        });
+                    input = createInput(data, cell, ranges);
                 }
                 // Update input value on every call
-                input.property("value", data.value);
+                input.property("value", data.value);                        // Sets the value property of the input (form element)
             } else {
-                cell.text(data.value);
+                cell.text(data.value);                                      // Overwrite HTML content with the text
             }
         });
 }
