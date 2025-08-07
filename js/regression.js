@@ -15,13 +15,21 @@ export function linear_regression(prices, quantities) {
     const y_mean = prices.reduce((p1, p2) => p1 + p2, 0) / prices.length;           // Sum of prices / length, accumulator init 0
 }
 
-export function mean_squared_error() {
+function mean_squared_error() {
 
 }
 
-export function root_mean_square_error() {
+function root_mean_square_error() {
 
 }
 
-export function r_squared() {
+function coefficient_of_determination() {
+}
+
+export function error_calculations() {
+    const mse = mean_squared_error();
+    const rmse = root_mean_square_error();
+    const r_squared = coefficient_of_determination();
+
+    // Update respective labels
 }

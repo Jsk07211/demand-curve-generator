@@ -15,7 +15,7 @@
         <li>You can edit the quantity values in the table, but only for rows between the first and last.</li>
         <li>All input values are automatically clamped to stay within the minimum and maximum quantities defined by the
             first and last rows.</li>
-        <li>After changing a value, press <em>Enter</em> to register your update.</li>
+        <li>After changing a value, press <em>Tab</em> or <em>Enter</em> to register your update.</li>
         <li>When you're ready, click the <em>Generate</em> button to update the graph with your changes.</li>
     </ul>
     </p>
@@ -28,9 +28,9 @@
     </div>
     <div id="error-container">
         <ul>
-            <li>MSE: </li>
-            <li>RMSE: </li>
-            <li>R<sup>2</sup>: </li>
+            <li id="mse">MSE: </li>
+            <li id="rmse">RMSE: </li>
+            <li id="r2">R<sup>2</sup>: </li>
         </ul>
     </div>
     <div>
@@ -39,6 +39,9 @@
         <h2>Root Mean Square Error (RMSE)</h2>
         <h2>Coefficient of Determination (R<sup>2</sup>)</h2>
         <h1>Understanding Linear Regression</h1>
+        <h2>Breaking Down the Formula</h2>
+        <h2>Errors vs Residuals</h2>
+        <h2>Walking Through Implementation</h2>
     </div>
 
     <!-- Script runs after HTML is loaded -->

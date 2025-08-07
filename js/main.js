@@ -15,6 +15,8 @@ const { tbody, columns } = setupTable();
 
 updateTable(tbody, columns, dataset, ranges);
 updateGraph(scatter, dataset, x, y);
+// Call linear regression here
+// error_calculations();
 
 const generate = document.querySelector("#generate");
 
@@ -23,4 +25,6 @@ console.log(generate);
 generate.addEventListener("click", () => {
     console.log(dataset);
     updateGraph(scatter, dataset, x, y);
+    // Call linear regression here
+    // error_calculations();
 });
