@@ -12,6 +12,28 @@ function cellRange(value, min, max) {
     return value > max ? max : value;
 }
 
+function checkEditable(dataset, data) {
+    return data.column === "quantity"
+        && data.rowIndex != 0
+        && data.rowIndex !== dataset.length - 1;
+}
+
+function createInput(data, cell, ranges) {
+    const input = cell.append("input")
+        .attr("type", "number")
+        .attr("min", 0)
+        .attr("max", ranges.max_y)
+        .on("keydown", function (event) {
+            if (event.key === "Enter" || event.key === "Tab") {
+                this.value = cellRange(this.value, ranges.min_y, ranges.max_y);
+                data.rowData[data.column] = this.value;
+                if (event.key === "Enter") this.blur();
+            }
+        });
+
+    return input;
+}
+
 export function updateTable(tbody, columns, dataset, ranges) {
     // Select all rows and input our data
     const rows = tbody.selectAll("tr")                                      // Initially, no rows to select
@@ -32,29 +54,29 @@ export function updateTable(tbody, columns, dataset, ranges) {
         .append("td")                                                       // Add td element into DOM for each datapoint
         .each(function (data) {                                             // Cannot use arrow functions since they don't bind on `this` (they get it from surrounding scope)
             // Can only edit quantity not at start or end of table (fixed endpoints)
-            const isEditable = data.column === "quantity"
-                && data.rowIndex != 0
-                && data.rowIndex !== dataset.length - 1;
+            const isEditable = checkEditable(dataset, data);
+            const cell = d3.select(this);
 
             if (isEditable) {
-                d3.select(this)
-                    .append("input")
-                    .attr("type", "number")
-                    .attr("min", 0)
-                    .attr("max", ranges.max_y)
-                    .attr("value", data.value)
-                    .on("keydown", function (event) {                         // Cannot use arrow function since it doesn't bind on `this`
-                        if (event.key == "Enter" || event.key === "Tab") {    // Explicitly passing event; global windows.event is deprecated
-                            this.value = cellRange(this.value, ranges.min_y, ranges.max_y);
-                            data.rowData[data.column] = this.value;           // Unary `+` converts string into a number
-
-                            if (event.key === "Enter") {
-                                this.blur();                                      // Remove focus from
+                // Select existing input or append if none exists
+                let input = cell.select("input");
+                if (input.empty()) {
+                    input = cell.append("input")
+                        .attr("type", "number")
+                        .attr("min", 0)
+                        .attr("max", ranges.max_y)
+                        .on("keydown", function (event) {
+                            if (event.key === "Enter" || event.key === "Tab") {
+                                this.value = cellRange(this.value, ranges.min_y, ranges.max_y);
+                                data.rowData[data.column] = this.value;
+                                if (event.key === "Enter") this.blur();
                             }
-                        }
-                    })
+                        });
+                }
+                // Update input value on every call
+                input.property("value", data.value);
             } else {
-                d3.select(this).text(data.value);
+                cell.text(data.value);
             }
         });
 }

@@ -1,4 +1,4 @@
-export const initial_data = [
+export const dataset = [
     { price: 10, quantity: 900 },
     { price: 20, quantity: 800 },
     { price: 30, quantity: 700 },
