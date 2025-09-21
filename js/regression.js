@@ -3,33 +3,82 @@
  * to understand what goes under the hood
  */
 
-export function linear_regression(prices, quantities) {
+export function linearRegression(prices, quantities) {
     /**
      * Calculate the best fit line using Ordinary Least Squares (OLS) Method.
      * Very common in Econometrics!
      */
+    var xSum = 0;
+    var ySum = 0;
+    var xySum = 0;
+    var xxSum = 0;
 
-    const equation = {};
+    // For faster access
+    var x = 0;
+    var y = 0;
+    var length = prices.length;
 
-    const x_mean = quantities.reduce((q1, q2) => q1 + q2, 0) / quantities.length;   // Sum of quantities / length, accumulator init 0
-    const y_mean = prices.reduce((p1, p2) => p1 + p2, 0) / prices.length;           // Sum of prices / length, accumulator init 0
+    if (length != quantities.length) {
+        throw new Error('Each price (y) should be associated to a quantity (x)!');
+    }
+
+    if (length === 0) {
+        return [[], []];
+    }
+
+    // Calculate the sums (We want to predict quantities based on price)
+    for (var i = 0; i < length; i++) {
+        x = prices[i];
+        y = quantities[i];
+        xSum += x;
+        ySum += y;
+        xxSum += x * x;
+        xySum += x * y;
+    }
+
+    const gradient = (length * xySum - xSum * ySum) / (length * xxSum - Math.pow(xSum, 2));
+    const intercept = (ySum / length) - (gradient * xSum) / length;
+
+    const fitted = [];
+
+    for (var i = 0; i < length; i++) {
+        x = prices[i];
+        y = x * gradient + intercept;
+
+        fitted.push({ price: x, quantity: y });
+    }
+
+    return fitted;
 }
 
-function mean_squared_error() {
+function meanSquaredError(actual, predicted) {
+    const length = actual.length;
 
+    if (length != predicted.length) {
+        throw new Error("Each actual value must have a corresponding predicted value");
+    }
+
+    let sumSquaredError = 0;
+
+    for (var i = 0; i < length; i++) {
+        sumSquaredError += Math.pow(actual[i] - predicted[i], 2);
+    }
+
+    return sumSquaredError / length;
 }
 
-function root_mean_square_error() {
-
+function rootMeanSquareError() {
+    return 0;
 }
 
-function coefficient_of_determination() {
+function coefficientOfDetermination() {
+    return 0;
 }
 
-export function error_calculations() {
-    const mse = mean_squared_error();
-    const rmse = root_mean_square_error();
-    const r_squared = coefficient_of_determination();
+export function errorCalculations(actual, predicted) {
+    const mse = meanSquaredError(actual, predicted);
+    const rmse = rootMeanSquareError();
+    const rSquared = coefficientOfDetermination();
 
-    // Update respective labels
+    return { mse, rmse, rSquared };
 }

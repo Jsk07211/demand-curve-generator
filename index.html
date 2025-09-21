@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demand Curve Generation</title>
     <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+        </script>
 </head>
 
 <body>
@@ -28,17 +31,92 @@
     </div>
     <div id="error-container">
         <ul>
-            <li id="mse">MSE: </li>
-            <li id="rmse">RMSE: </li>
-            <li id="r2">R<sup>2</sup>: </li>
+            <li id="mse">MSE: <span class="value"></span></li>
+            <li id="rmse">RMSE: <span class="value"></span></li>
+            <li id="r2">R<sup>2</sup>: <span class="value"></span></li>
         </ul>
     </div>
     <div>
-        <h1>Understanding Error Measurements</h1>
-        <h2>Mean Square Error (MSE)</h2>
+
+        <h2>Mean Squared Error (MSE)</h2>
+        <p>
+            Mean Squared Error measures the average of the squared differences between the predicted value and the
+            actual value.
+
+            </br></br>
+            There are two main reasons why we take the square of the error:
+        <ul>
+            <li>
+                We want to know the difference in value between the predicted and the actual, but we do not care if the
+                predicted value is greater or less than the actual value.
+                <details>
+                    <summary>Example</summary>
+                    <p>
+                        <strong>Case 1:</strong></br>
+                        Actual = 4, Predicted = 2</br>
+                        \(error = 4 - 2 = 2\)
+                        </br></br>
+                        <strong>Case 2:</strong></br>
+                        Actual = 2, Predicted = 4</br>
+                        \(error = 2 - 4 = -2\)
+                        </br></br>
+                        In both cases, what really matters is that there is a difference of 2 between the actual and
+                        predicted value, not that the predicted value is greater or less than the actual value.
+                    </p>
+                </details>
+            </li>
+            <li>
+                We want to focus on reducing the largest sources of error.
+                <details>
+                    <summary>Example</summary>
+                    <p>
+                        In the real world, the consequences of one really large error is a lot more severe than several
+                        smaller consequences.
+                        </br></br>
+                        <strong>Case 1:</strong></br>
+                        My model's prediction is really off when the price = $5. If price = $5, it predicts that
+                        consumers will demand 5000 units of my good. In actuality, they only demand for 5 units of my
+                        good, and I've produced 4995 units for nothing.
+                        </br></br>
+                        <strong>Case 2:</strong></br>
+                        My model's prediction is always off by 1. If price = $5, it predicts that consumers will demand
+                        6 units of my good. In actuality, they only demand for 5 units of my good. Then, if I decrease
+                        the price until price = $4, my model predicts that consumers will demand 7 units of my good, but
+                        they only demand for 6 units.
+                        </br></br>
+                        We see that the impact of a single, large error has the potential for more disasterous results
+                        than
+                        several smaller errors.
+                    </p>
+                </details>
+            </li>
+        </ul>
+        Formula:
+        $$ MSE = \frac{1}{n} \sum (y_i - \hat{y_i})^2 $$
+        <ul>
+            <li>
+                \(\frac{1}{n}\): Average of the sum of squared errors
+            </li>
+            <li>
+                \(y_i\): Actual value
+            </li>
+            <li>
+                \(\hat{y_i}\): Predicted value
+            </li>
+            <li>
+                \(y_i - \hat{y_i}\): Error
+            </li>
+        </ul>
+        </p>
         <h2>Root Mean Square Error (RMSE)</h2>
         <h2>Coefficient of Determination (R<sup>2</sup>)</h2>
         <h1>Understanding Linear Regression</h1>
+        <p>
+            For this demonstration, we use the Ordinary Least Squares (OLS) Method to perform linear regression.
+
+            </br>
+            // TODO: Add explanation for the variables and equations in the calculation
+        </p>
         <h2>Breaking Down the Formula</h2>
         <h2>Errors vs Residuals</h2>
         <h2>Walking Through Implementation</h2>
