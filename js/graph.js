@@ -1,4 +1,24 @@
-export function updateGraph(scatter, dataset, x, y) {
+import { linear_regression } from './regression.js';
+
+export function updateGraph(scatter, best_fit, dataset, x, y) {
+    // Calculate best fit line
+    const prices = dataset.map(data => data.price);
+    const quantities = dataset.map(data => data.quantity);
+
+    const best_fit_points = linear_regression(prices, quantities);
+
+    const best_fit_line = d3.line()
+        .x(data => x(data.price))
+        .y(data => y(data.quantity));
+
+    best_fit
+        .selectAll("path.best-fit")
+        .data([best_fit_points])     // bind ONE array to ONE path
+        .join("path")
+        .attr("class", "best-fit")
+        .attr("stroke", "black")
+        .attr("d", best_fit_line);
+
     console.log(scatter);
 
     const dots = scatter.selectAll("circle")                                // Rebinds latest state of dataset to circle
@@ -24,11 +44,11 @@ export function setupGraph(ranges) {
 
     // Set up the x and y scales
     // Range of pixels where the scale can live 
-    const x = d3.scaleLinear()                                              // x-axis: Price
+    const x = d3.scaleLinear()                                              // x-axis: Quantity
         .range([0, width])
         .domain([0, ranges.max_x + 0.1 * ranges.max_x]);
 
-    const y = d3.scaleLinear()                                              // y-axis: Quantity
+    const y = d3.scaleLinear()                                              // y-axis: Price
         .range([height, 0])                                                 // svg coordinates for y-axis are reversed
         .domain([0, ranges.max_y + 0.1 * ranges.max_y]);
 
@@ -71,7 +91,8 @@ export function setupGraph(ranges) {
         .attr("dy", ".75em")
         .text("Price ($)");
 
+    const best_fit = graph.append("g");
     const scatter = graph.append("g");
 
-    return { scatter, x, y };
+    return { scatter, best_fit, x, y };
 }

@@ -10,13 +10,11 @@ const ranges = {
     "max_y": d3.max(dataset, data => data.quantity),
 }
 
-const { scatter, x, y } = setupGraph(ranges);
+const { scatter, best_fit, x, y } = setupGraph(ranges);
 const { tbody, columns } = setupTable();
 
 updateTable(tbody, columns, dataset, ranges);
-updateGraph(scatter, dataset, x, y);
-// Call linear regression here
-// error_calculations();
+updateGraph(scatter, best_fit, dataset, x, y);
 
 const generate = document.querySelector("#generate");
 
@@ -24,7 +22,5 @@ console.log(generate);
 
 generate.addEventListener("click", () => {
     console.log(dataset);
-    updateGraph(scatter, dataset, x, y);
-    // Call linear regression here
-    // error_calculations();
+    updateGraph(scatter, best_fit, dataset, x, y);
 });

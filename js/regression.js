@@ -8,11 +8,47 @@ export function linear_regression(prices, quantities) {
      * Calculate the best fit line using Ordinary Least Squares (OLS) Method.
      * Very common in Econometrics!
      */
+    var sum_x = 0;
+    var sum_y = 0;
+    var sum_xy = 0;
+    var sum_xx = 0;
 
-    const equation = {};
+    // For faster access
+    var x = 0;
+    var y = 0;
+    var length = prices.length;
 
-    const x_mean = quantities.reduce((q1, q2) => q1 + q2, 0) / quantities.length;   // Sum of quantities / length, accumulator init 0
-    const y_mean = prices.reduce((p1, p2) => p1 + p2, 0) / prices.length;           // Sum of prices / length, accumulator init 0
+    if (length != quantities.length) {
+        throw new Error('Each price (y) should be associated to a quantity (x)!');
+    }
+
+    if (length === 0) {
+        return [[], []];
+    }
+
+    // Calculate the sums (We want to predict quantities based on price)
+    for (var i = 0; i < length; i++) {
+        x = prices[i];
+        y = quantities[i];
+        sum_x += x;
+        sum_y += y;
+        sum_xx += x * x;
+        sum_xy += x * y;
+    }
+
+    const gradient = (length * sum_xy - sum_x * sum_y) / (length * sum_xx - sum_x * sum_x);
+    const intercept = (sum_y / length) - (gradient * sum_x) / length;
+
+    const fitted = [];
+
+    for (var i = 0; i < length; i++) {
+        x = prices[i];
+        y = x * gradient + intercept;
+
+        fitted.push({ price: x, quantity: y });
+    }
+
+    return fitted;
 }
 
 function mean_squared_error() {

@@ -5,11 +5,14 @@ function cellRange(value, min, max) {
      * If user goes below the min, set the value to min.
      * If user exceeds the max, set the value to max.
      */
-    if (value < min) {
+
+    const rounded = Math.round(parseFloat(value));
+
+    if (rounded < min) {
         return min;
     }
 
-    return value > max ? max : value;
+    return rounded > max ? max : rounded;
 }
 
 function checkEditable(dataset, data) {
@@ -33,7 +36,7 @@ function createInput(data, cell, ranges) {
         .on("keydown", function (event) {
             if (event.key === "Enter" || event.key === "Tab") {
                 this.value = cellRange(this.value, ranges.min_y, ranges.max_y);
-                data.rowData[data.column] = this.value;
+                data.rowData[data.column] = parseInt(this.value);
                 if (event.key === "Enter") {
                     this.blur();
                 }
