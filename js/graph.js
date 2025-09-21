@@ -29,7 +29,7 @@ export function updateBestFit(bestFit, dataset, x, y) {
 
     bestFit
         .selectAll("path.best-fit")
-        .data([bestFitPoints])     // bind ONE array to ONE path
+        .data([bestFitPoints])                                              // bind one array to the path
         .join("path")
         .attr("class", "best-fit")
         .attr("stroke", "black")
