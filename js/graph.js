@@ -1,26 +1,6 @@
-import { linear_regression } from './regression.js';
+import { errorCalculations, linearRegression } from './regression.js';
 
-export function updateGraph(scatter, best_fit, dataset, x, y) {
-    // Calculate best fit line
-    const prices = dataset.map(data => data.price);
-    const quantities = dataset.map(data => data.quantity);
-
-    const best_fit_points = linear_regression(prices, quantities);
-
-    const best_fit_line = d3.line()
-        .x(data => x(data.price))
-        .y(data => y(data.quantity));
-
-    best_fit
-        .selectAll("path.best-fit")
-        .data([best_fit_points])     // bind ONE array to ONE path
-        .join("path")
-        .attr("class", "best-fit")
-        .attr("stroke", "black")
-        .attr("d", best_fit_line);
-
-    console.log(scatter);
-
+export function updateScatter(scatter, dataset, x, y) {
     const dots = scatter.selectAll("circle")                                // Rebinds latest state of dataset to circle
         .data(dataset);
 
@@ -31,9 +11,42 @@ export function updateGraph(scatter, best_fit, dataset, x, y) {
         .attr("cx", data => x(data.price))                                  // Use x scale function for x values (data values => pixel positions)
         .attr("cy", data => y(data.quantity))                               // Use y scale function for y values (data values => pixel positions)
         .attr("r", 5)
-        .style("fill", "#000");
+        .style("fill", "black");
 
     // No need to call .exit() since dataset size is fixed
+}
+export function updateBestFit(bestFit, dataset, x, y) {
+    // Calculate best fit line
+    const pricesActual = dataset.map(data => data.price);
+    const quantitiesActual = dataset.map(data => data.quantity);
+
+    const bestFitPoints = linearRegression(pricesActual, quantitiesActual);
+    const quantitiesPredicted = bestFitPoints.map(data => data.quantity);
+
+    const bestFitLine = d3.line()
+        .x(data => x(data.price))
+        .y(data => y(data.quantity));
+
+    bestFit
+        .selectAll("path.best-fit")
+        .data([bestFitPoints])     // bind ONE array to ONE path
+        .join("path")
+        .attr("class", "best-fit")
+        .attr("stroke", "black")
+        .attr("d", bestFitLine);
+
+    return errorCalculations(quantitiesActual, quantitiesPredicted);
+}
+
+function updateMetric(id, value) {
+    const valSpan = document.getElementById(id).querySelector('.value');
+    valSpan.textContent = value.toFixed(2);
+}
+
+export function updateErrorCalculations(mse, rmse, rSquared) {
+    updateMetric('mse', mse);
+    updateMetric('rmse', rmse);
+    updateMetric('r2', rSquared);
 }
 
 export function setupGraph(ranges) {
@@ -46,11 +59,11 @@ export function setupGraph(ranges) {
     // Range of pixels where the scale can live 
     const x = d3.scaleLinear()                                              // x-axis: Quantity
         .range([0, width])
-        .domain([0, ranges.max_x + 0.1 * ranges.max_x]);
+        .domain([0, ranges.xMax + 0.1 * ranges.xMax]);
 
     const y = d3.scaleLinear()                                              // y-axis: Price
         .range([height, 0])                                                 // svg coordinates for y-axis are reversed
-        .domain([0, ranges.max_y + 0.1 * ranges.max_y]);
+        .domain([0, ranges.yMax + 0.1 * ranges.yMax]);
 
     // Create the svg element and append it to the chart                
     const graph = d3.select("#graph-container")
@@ -61,8 +74,8 @@ export function setupGraph(ranges) {
         .attr("transform", `translate(${margin.left}, ${margin.top})`);     // Image sits nicely in container
 
     // Define the x and y domains (What data goes into the range we declared earlier)
-    x.domain([0, ranges.max_x + 0.1 * ranges.max_x]);
-    y.domain([0, ranges.max_y + 0.1 * ranges.max_y]);
+    x.domain([0, ranges.xMax + 0.1 * ranges.xMax]);
+    y.domain([0, ranges.yMax + 0.1 * ranges.yMax]);
 
     // Add the x-axis
     graph.append("g")                                                       // Append new group element to graph
@@ -91,8 +104,8 @@ export function setupGraph(ranges) {
         .attr("dy", ".75em")
         .text("Price ($)");
 
-    const best_fit = graph.append("g");
+    const bestFit = graph.append("g");
     const scatter = graph.append("g");
 
-    return { scatter, best_fit, x, y };
+    return { scatter, bestFit, x, y };
 }

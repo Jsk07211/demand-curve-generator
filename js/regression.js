@@ -3,15 +3,15 @@
  * to understand what goes under the hood
  */
 
-export function linear_regression(prices, quantities) {
+export function linearRegression(prices, quantities) {
     /**
      * Calculate the best fit line using Ordinary Least Squares (OLS) Method.
      * Very common in Econometrics!
      */
-    var sum_x = 0;
-    var sum_y = 0;
-    var sum_xy = 0;
-    var sum_xx = 0;
+    var xSum = 0;
+    var ySum = 0;
+    var xySum = 0;
+    var xxSum = 0;
 
     // For faster access
     var x = 0;
@@ -30,14 +30,14 @@ export function linear_regression(prices, quantities) {
     for (var i = 0; i < length; i++) {
         x = prices[i];
         y = quantities[i];
-        sum_x += x;
-        sum_y += y;
-        sum_xx += x * x;
-        sum_xy += x * y;
+        xSum += x;
+        ySum += y;
+        xxSum += x * x;
+        xySum += x * y;
     }
 
-    const gradient = (length * sum_xy - sum_x * sum_y) / (length * sum_xx - sum_x * sum_x);
-    const intercept = (sum_y / length) - (gradient * sum_x) / length;
+    const gradient = (length * xySum - xSum * ySum) / (length * xxSum - Math.pow(xSum, 2));
+    const intercept = (ySum / length) - (gradient * xSum) / length;
 
     const fitted = [];
 
@@ -51,21 +51,34 @@ export function linear_regression(prices, quantities) {
     return fitted;
 }
 
-function mean_squared_error() {
+function meanSquaredError(actual, predicted) {
+    const length = actual.length;
 
+    if (length != predicted.length) {
+        throw new Error("Each actual value must have a corresponding predicted value");
+    }
+
+    let sumSquaredError = 0;
+
+    for (var i = 0; i < length; i++) {
+        sumSquaredError += Math.pow(actual[i] - predicted[i], 2);
+    }
+
+    return sumSquaredError / length;
 }
 
-function root_mean_square_error() {
-
+function rootMeanSquareError() {
+    return 0;
 }
 
-function coefficient_of_determination() {
+function coefficientOfDetermination() {
+    return 0;
 }
 
-export function error_calculations() {
-    const mse = mean_squared_error();
-    const rmse = root_mean_square_error();
-    const r_squared = coefficient_of_determination();
+export function errorCalculations(actual, predicted) {
+    const mse = meanSquaredError(actual, predicted);
+    const rmse = rootMeanSquareError();
+    const rSquared = coefficientOfDetermination();
 
-    // Update respective labels
+    return { mse, rmse, rSquared };
 }
