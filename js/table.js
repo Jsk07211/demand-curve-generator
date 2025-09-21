@@ -1,4 +1,4 @@
-function cellRange(value, min, max) {
+function cellRange(value, current, min, max) {
     /**
      * Clamp the values to be in range.
      * 
@@ -6,7 +6,13 @@ function cellRange(value, min, max) {
      * If user exceeds the max, set the value to max.
      */
 
-    const rounded = Math.round(parseFloat(value));
+    let parsed = parseFloat(value);
+
+    if (Number.isNaN(parsed)) {
+        return current;
+    }
+
+    const rounded = Math.round(parsed);
 
     if (rounded < min) {
         return min;
@@ -32,11 +38,12 @@ function createInput(data, cell, ranges) {
     const input = cell.append("input")
         .attr("type", "number")
         .attr("min", 0)
-        .attr("max", ranges.max_y)
+        .attr("max", ranges.yMax)
         .on("keydown", function (event) {
             if (event.key === "Enter" || event.key === "Tab") {
-                this.value = cellRange(this.value, ranges.min_y, ranges.max_y);
+                this.value = cellRange(this.value, data.rowData[data.column], ranges.yMin, ranges.yMax);
                 data.rowData[data.column] = parseInt(this.value);
+
                 if (event.key === "Enter") {
                     this.blur();
                 }
