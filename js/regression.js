@@ -67,8 +67,8 @@ function meanSquaredError(actual, predicted) {
     return sumSquaredError / length;
 }
 
-function rootMeanSquareError() {
-    return 0;
+function rootMeanSquareError(mse) {
+    return Math.pow(mse, 0.5);
 }
 
 function coefficientOfDetermination() {
@@ -77,7 +77,7 @@ function coefficientOfDetermination() {
 
 export function errorCalculations(actual, predicted) {
     const mse = meanSquaredError(actual, predicted);
-    const rmse = rootMeanSquareError();
+    const rmse = rootMeanSquareError(mse);
     const rSquared = coefficientOfDetermination();
 
     return { mse, rmse, rSquared };

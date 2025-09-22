@@ -37,14 +37,14 @@
         </ul>
     </div>
     <div>
-
+        <h2>Errors vs Residuals</h2>
         <h2>Mean Squared Error (MSE)</h2>
         <p>
             Mean Squared Error measures the average of the squared differences between the predicted value and the
-            actual value.
+            actual value. A lower score is indicative of a better fit.
 
             </br></br>
-            There are two main reasons why we take the square of the error:
+            There are two main reasons why we take the square of the residual:
         <ul>
             <li>
                 We want to know the difference in value between the predicted and the actual, but we do not care if the
@@ -54,11 +54,11 @@
                     <p>
                         <strong>Case 1:</strong></br>
                         Actual = 4, Predicted = 2</br>
-                        \(error = 4 - 2 = 2\)
+                        \(residual = 4 - 2 = 2\)
                         </br></br>
                         <strong>Case 2:</strong></br>
                         Actual = 2, Predicted = 4</br>
-                        \(error = 2 - 4 = -2\)
+                        \(residual = 2 - 4 = -2\)
                         </br></br>
                         In both cases, what really matters is that there is a difference of 2 between the actual and
                         predicted value, not that the predicted value is greater or less than the actual value.
@@ -66,13 +66,11 @@
                 </details>
             </li>
             <li>
-                We want to focus on reducing the largest sources of error.
+                We want to focus on reducing the largest sources of error. In the real world, the consequences of one
+                really large error is a lot more severe than several smaller consequences.
                 <details>
                     <summary>Example</summary>
                     <p>
-                        In the real world, the consequences of one really large error is a lot more severe than several
-                        smaller consequences.
-                        </br></br>
                         <strong>Case 1:</strong></br>
                         My model's prediction is really off when the price = $5. If price = $5, it predicts that
                         consumers will demand 5000 units of my good. In actuality, they only demand for 5 units of my
@@ -85,8 +83,7 @@
                         they only demand for 6 units.
                         </br></br>
                         We see that the impact of a single, large error has the potential for more disasterous results
-                        than
-                        several smaller errors.
+                        than several smaller errors.
                     </p>
                 </details>
             </li>
@@ -95,7 +92,7 @@
         $$ MSE = \frac{1}{n} \sum (y_i - \hat{y_i})^2 $$
         <ul>
             <li>
-                \(\frac{1}{n}\): Average of the sum of squared errors
+                \(\frac{1}{n}\): Average of the sum of squared residuals
             </li>
             <li>
                 \(y_i\): Actual value
@@ -104,21 +101,35 @@
                 \(\hat{y_i}\): Predicted value
             </li>
             <li>
-                \(y_i - \hat{y_i}\): Error
+                \(y_i - \hat{y_i}\): Residuals
             </li>
         </ul>
         </p>
-        <h2>Root Mean Square Error (RMSE)</h2>
+        <h2>Root Mean Squared Error (RMSE)</h2>
+        Root Mean Squared Error also measures the average of the squared differences between the predicted value and the
+        actual value, with a lower score being indicative of a better fit. The difference between RMSE and MSE lie in
+        their units.
+        </br></br>
+        RMSE scores are easier to interpret than MSE scores because they're in the target units. If my model is
+        predicting how many units of goods I need to produce, RMSE puts errors in terms of units, whereas MSE puts
+        errors in terms of units<sup>2</sup>. What is units<sup>2</sup> even supposed to mean?
+        </br></br>
+
+        Formula:
+        $$ MSE = \sqrt{\frac{\sum (y_i - \hat{y_i})^2}{n}} $$
+
+        You'll notice that the only difference between the formulae for MSE and RMSE is the square root, which restores
+        the target unit.
+
         <h2>Coefficient of Determination (R<sup>2</sup>)</h2>
         <h1>Understanding Linear Regression</h1>
         <p>
             For this demonstration, we use the Ordinary Least Squares (OLS) Method to perform linear regression.
-
-            </br>
-            // TODO: Add explanation for the variables and equations in the calculation
         </p>
         <h2>Breaking Down the Formula</h2>
-        <h2>Errors vs Residuals</h2>
+        <p>
+            // TODO: Add explanation for the variables and equations in the calculation
+        </p>
         <h2>Walking Through Implementation</h2>
     </div>
 
